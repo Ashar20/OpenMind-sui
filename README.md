@@ -2,7 +2,7 @@
 
 **The first prediction-market vault where the hedge policy thinks for itself, remembers every cycle, and proves every decision on-chain before the market settles.**
 
-Three tracks, one codebase: **DeepBook Predict** (adaptive carry vault), **Walrus** (reasoning blobs + MemWal memory), **OpenZeppelin** (audited NAV math + access control).
+Four tracks, one codebase: **DeepBook Predict** (adaptive carry vault), **Walrus** (reasoning blobs + MemWal memory), **OpenZeppelin** (audited NAV math + access control), **Agentic Web sub-track 2** (revocable, budget-capped autonomous agent wallet).
 
 Deadline: **June 29, 2026**
 
@@ -38,37 +38,28 @@ flowchart LR
 
 ---
 
-## Live testnet evidence (cycle 1)
+## Live testnet evidence (current package, triggered via the /brain "Run cycle" button)
 
-Deployed package: `0x1d627374a7a393a9961324ac039927e029edf7f4f2c3cc6d98bcb4702a5e4dc7`
+Deployed package: `0x3538ab0c8317477f23d1c53603a2d402bccf2f53fee8e52f9af1670bc6f3c17a`
 
 | Step | Tx |
 |---|---|
-| Vault open | [2KUkWwpWtPJzxCTrbFtxCUhTSPbeUmKBJCZfFiqTGhHS](https://suiscan.xyz/testnet/tx/2KUkWwpWtPJzxCTrbFtxCUhTSPbeUmKBJCZfFiqTGhHS) |
-| Reasoning anchor | [Fb37ggDAyiFZqg8WJb74GNuMfRTZC8YdaKFZufDj7hGc](https://suiscan.xyz/testnet/tx/Fb37ggDAyiFZqg8WJb74GNuMfRTZC8YdaKFZufDj7hGc) |
-| Vault close | [ud5HM2AU1hNdHYvVa7r9EcL5cyZs3WupicGLoSw99fC](https://suiscan.xyz/testnet/tx/ud5HM2AU1hNdHYvVa7r9EcL5cyZs3WupicGLoSw99fC) |
+| Vault close (previous cycle, settled OTM) | [321xzKYNpGT9GZDniairhwoB1ZzKnJNAhifqKR2vzVt3](https://suiscan.xyz/testnet/tx/321xzKYNpGT9GZDniairhwoB1ZzKnJNAhifqKR2vzVt3) |
+| Reasoning anchor | [AfG6a4UhvvksupCfnuHs1cfrhkLPHN8PJgVT8hgdRyRG](https://suiscan.xyz/testnet/tx/AfG6a4UhvvksupCfnuHs1cfrhkLPHN8PJgVT8hgdRyRG) |
+| Vault open (agent_cap-gated) | [DWqNp4Crzorbfc7fB5KfRQRznqcmpxfYnBV8cyZnQMvn](https://suiscan.xyz/testnet/tx/DWqNp4Crzorbfc7fB5KfRQRznqcmpxfYnBV8cyZnQMvn) |
 
 | Walrus | Blob ID |
 |---|---|
-| Reasoning JSON | `9kCEUsUwlDV6GRz3ItJe7QAvJvmU8_KGw8SXfO9U42U` |
-| Settlement receipt | `j5KypANzV77uCO9Qe0XLAGsIy9wDcdxdijYQh76ofAw` |
+| Reasoning JSON | `t1wlK6WIsSng8nZ63T2gyYm9B9aKIWyQHaZUjR4z6eg` |
 
-**Outcome:** BTC settled above strike → hedge expired OTM. NAV ~49.99 dUSDC (from 50). MemWal stored outcome for future cycles.
+**AgentCap after this cycle:** `spent` and `action_count` both incremented on-chain (queryable live at `/api/agent-cap/state` or the `/wallet` page) — the budget/expiry/revocation gate is real, not advisory.
 
-Keeper: `0x0d786a55f9e2631bb9121d613fa36cdae52d6eab04236d808bb7eeec473424d9`  
-Vault: `0x7d1717e1392bf6a9d4bb7a441c4709474f68e565ac96cede3c4ea651ecc12fee`
+Vault: `0x5c7f075330ca60e6b3d68354baea80a624da25a6dbc771537994a00be9ca3f08`  
+AgentCap (shared): `0x637d19f22591a949f52abec8eb9142aab697d6ab930ef3b41154af00c3b0fe7b`
 
 ---
 
-## Demo story (for judges)
-
-1. **Deposit** dUSDC into the vault → receive omDUSDC shares.
-2. **Open** — Agent recalls 5 past MemWal cycles, reads news via Gemini, scores a 250 bps hedge, uploads reasoning to Walrus (SDK only), anchors on Sui, keeper opens a downside put on DeepBook Predict.
-3. **Wait** — Oracle runs ~85 minutes; no manual intervention.
-4. **Close** — Keeper redeems PLP, uploads settlement receipt to Walrus, remembers outcome in MemWal.
-5. **Verify** — `npm run verify:judge` replays historical oracles and compares fixed 250 bps vs dynamic AI budget across 3 PLP carry bands.
-
-The vault does not promise returns. The hedge is sized per-cycle by an agent that learns from its own history.
+Demo walkthrough for judges: see [DEMO.md](DEMO.md).
 
 ---
 

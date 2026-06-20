@@ -110,11 +110,12 @@ export default function VaultPage() {
       const amountRaw = BigInt(Math.round(parseFloat(amount) * 1e6));
       const tx = new Transaction();
       const coin = coinWithBalance({ type: DUSDC_TYPE, balance: amountRaw });
-      tx.moveCall({
+      const shares = tx.moveCall({
         target: `${OPENMIND_PACKAGE}::openmind_vault::deposit`,
         typeArguments: [DUSDC_TYPE],
         arguments: [tx.object(VAULT_OBJECT), coin],
       });
+      tx.transferObjects([shares], account.address);
       setStatus("Awaiting wallet signature…");
       const result = await signAndExecute({ transaction: tx });
       setStatus(`Deposited · ${result.digest.slice(0, 16)}…`);
@@ -131,11 +132,12 @@ export default function VaultPage() {
       const sharesRaw = BigInt(Math.round(parseFloat(amount) * 1e6));
       const tx = new Transaction();
       const coin = coinWithBalance({ type: VAULT_SHARE_TYPE, balance: sharesRaw });
-      tx.moveCall({
+      const out = tx.moveCall({
         target: `${OPENMIND_PACKAGE}::openmind_vault::withdraw`,
         typeArguments: [DUSDC_TYPE],
         arguments: [tx.object(VAULT_OBJECT), coin],
       });
+      tx.transferObjects([out], account.address);
       setStatus("Awaiting wallet signature…");
       const result = await signAndExecute({ transaction: tx });
       setStatus(`Withdrawn · ${result.digest.slice(0, 16)}…`);

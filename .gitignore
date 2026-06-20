@@ -19,3 +19,6 @@ openmind-main/
 # Contains a transcript with leaked live API keys — never commit
 cursor_document_review_for_openmind_dee.md
 
+
+# Vercel env upload (contains secrets — never commit)
+vercel-env.txt

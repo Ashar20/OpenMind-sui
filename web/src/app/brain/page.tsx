@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { GraphCanvas } from "@/components/graph-canvas";
 import { OntologyPanel } from "@/components/ontology-panel";
@@ -48,6 +49,26 @@ function outcomeTone(itm?: boolean) {
   return itm ? "signal" : "neutral";
 }
 
+type ParsedMemory = {
+  date: string | null;
+  theme: string | null;
+  outcome: string | null;
+  itm: boolean | null;
+  btcMove: string | null;
+  plpCarry: string | null;
+  raw: string;
+};
+
+function parseMemoryEntry(raw: string): ParsedMemory {
+  const date = raw.match(/\|\s*([\d-]+T[\d:.]+Z):/)?.[1] ?? null;
+  const theme = raw.match(/Theme:\s*([^|]+)/)?.[1]?.trim() ?? null;
+  const outcome = raw.match(/Outcome:\s*(.+)/)?.[1]?.trim() ?? null;
+  const btcMove = raw.match(/BTC move:\s*([+-][\d.]+%)/)?.[1] ?? null;
+  const plpCarry = raw.match(/PLP carry:\s*([\d.]+bps)/)?.[1] ?? null;
+  const itm = outcome ? outcome.toLowerCase().includes("paid") : null;
+  return { date, theme, outcome, itm, btcMove, plpCarry, raw };
+}
+
 type RunPhase = { ts: number; label: string };
 type RunResult = {
   closedOracleId?: string;
@@ -64,6 +85,8 @@ type RunState = {
   result: RunResult;
   error?: string;
 };
+
+const ACTIVE_RUN_KEY = "openmind_active_run_id";
 
 function RunCyclePanel({ onCompleted }: { onCompleted: () => void }) {
   const [run, setRun] = useState<RunState | null>(null);
@@ -95,11 +118,30 @@ function RunCyclePanel({ onCompleted }: { onCompleted: () => void }) {
       setRun({ id: "", status: "error", phases: [], result: {}, error: data.error ?? "failed to start" });
       return;
     }
+    sessionStorage.setItem(ACTIVE_RUN_KEY, data.runId);
     pollRef.current = setInterval(() => poll(data.runId), 1200);
     poll(data.runId);
   }
 
-  useEffect(() => stopPolling, []);
+  // Reconnect to whatever run was last started, even if this component
+  // remounted mid-run (page refresh, navigated away and back) — without
+  // this, the phase log only ever lived in React state and vanished the
+  // instant you left /brain, even though the run kept going server-side.
+  useEffect(() => {
+    const savedRunId = sessionStorage.getItem(ACTIVE_RUN_KEY);
+    if (!savedRunId) return;
+    poll(savedRunId).then(() => {
+      // poll() only restarts the interval itself when called from handleRun,
+      // so re-arm it here if the reconnected run is still in flight.
+      setRun((current) => {
+        if (current?.status === "running" && !pollRef.current) {
+          pollRef.current = setInterval(() => poll(savedRunId), 1200);
+        }
+        return current;
+      });
+    });
+    return stopPolling;
+  }, []);
 
   const isRunning = run?.status === "running";
 
@@ -280,13 +322,15 @@ export default function BrainPage() {
               </div>
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-2">
-              <div className="panel min-h-[320px] p-4">
+            <div className="grid items-start gap-4 lg:grid-cols-2">
+              <div className="panel flex h-[380px] flex-col p-4">
                 <SectionLabel index="02" className="mb-3">
                   Knowledge graph {graph?.mode ? `· ${graph.mode}` : ""}
                 </SectionLabel>
                 {nodes.length ? (
-                  <GraphCanvas nodes={nodes} edges={edges} />
+                  <div className="min-h-0 flex-1">
+                    <GraphCanvas nodes={nodes} edges={edges} />
+                  </div>
                 ) : (
                   <p className="mono text-[11px] text-faint">
                     No graph nodes for this cycle (simple fallback or Walrus unavailable).
@@ -302,11 +346,61 @@ export default function BrainPage() {
                 <SectionLabel index="03" className="mb-3">Evidence</SectionLabel>
                 <ul className="space-y-2">
                   {walrus.evidence.slice(0, 6).map((e, i) => (
-                    <li key={i} className="border-l border-line pl-3 text-sm text-muted">
+                    <motion.li
+                      key={i}
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.06 }}
+                      className="border-l border-line pl-3 text-sm text-muted"
+                    >
                       <span className="text-text">{e.headline}</span>
                       <span className="mono ml-2 text-[10px] uppercase text-faint">{e.source}</span>
-                    </li>
+                    </motion.li>
                   ))}
+                </ul>
+              </div>
+            ) : null}
+
+            {walrus?.memory_context?.length ? (
+              <div className="panel p-4">
+                <SectionLabel index="04" className="mb-3">
+                  MemWal recall · {walrus.memory_context.length} past cycle
+                  {walrus.memory_context.length === 1 ? "" : "s"}
+                </SectionLabel>
+                <p className="mono mb-3 text-[10px] text-faint">
+                  Retrieved from persistent Walrus Memory before this decision was made —
+                  not re-derived after the fact.
+                </p>
+                <ul className="space-y-2">
+                  {walrus.memory_context.map((raw, i) => {
+                    const m = parseMemoryEntry(raw);
+                    return (
+                      <motion.li
+                        key={i}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.08 }}
+                        className="border-l border-cyan/40 pl-3 text-sm text-muted"
+                      >
+                        <div className="flex flex-wrap items-baseline gap-2">
+                          <span className="text-text">{m.theme ?? "Bitcoin"}</span>
+                          {m.date && (
+                            <span className="mono text-[10px] text-faint">
+                              {new Date(m.date).toLocaleDateString()}
+                            </span>
+                          )}
+                          {m.outcome && (
+                            <Pill tone={outcomeTone(m.itm ?? undefined)}>{m.outcome}</Pill>
+                          )}
+                        </div>
+                        <div className="mono mt-1 text-[10px] text-faint">
+                          {m.btcMove && <>BTC {m.btcMove}</>}
+                          {m.btcMove && m.plpCarry && " · "}
+                          {m.plpCarry && <>carry {m.plpCarry}</>}
+                        </div>
+                      </motion.li>
+                    );
+                  })}
                 </ul>
               </div>
             ) : null}

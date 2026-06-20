@@ -8,9 +8,12 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/", label: "Terminal" },
+  { href: "/pitch", label: "Pitch" },
   { href: "/vault", label: "Vault" },
+  { href: "/vault/sim", label: "Sim" },
   { href: "/brain", label: "Brain" },
   { href: "/proof", label: "Proof" },
+  { href: "/wallet", label: "Wallet" },
 ];
 
 type Health = {

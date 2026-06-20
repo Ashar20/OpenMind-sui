@@ -15,7 +15,7 @@ export function OntologyPanel({
   edgeCount: number;
 }) {
   return (
-    <div className="panel flex h-full flex-col p-4">
+    <div className="panel flex h-[380px] flex-col p-4">
       <SectionLabel index="01">Ontology</SectionLabel>
 
       {!ontology ? (
@@ -24,7 +24,7 @@ export function OntologyPanel({
           market before reading the evidence.
         </p>
       ) : (
-        <div className="mt-4 space-y-5">
+        <div className="mt-4 min-h-0 flex-1 space-y-5 overflow-y-auto">
           <div>
             <div className="label mb-2 text-faint">Entity types</div>
             <div className="flex flex-wrap gap-1.5">

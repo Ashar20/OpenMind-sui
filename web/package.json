@@ -35,6 +35,6 @@
     "typescript": "^5"
   },
   "optionalDependencies": {
-    "@tailwindcss/oxide-darwin-arm64": "^4.3.1"
+    "@tailwindcss/oxide-darwin-arm64": "^4.3.0"
   }
 }
