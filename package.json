@@ -1,0 +1,24 @@
+{
+  "name": "openmind",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "verify:judge": "npm run verify:full",
+    "verify:full": "npm run verify:contracts && npm run verify:receipts && npm run verify:simulation && npm run verify:public-surface && npm run verify:narrative && npm run verify:submission",
+    "verify:contracts": "node scripts/verify-contracts.mjs",
+    "verify:receipts": "node scripts/verify-receipts.mjs",
+    "verify:simulation": "node scripts/verify-simulation.mjs",
+    "verify:public-surface": "node scripts/verify-public-surface.mjs",
+    "verify:narrative": "node scripts/verify-narrative.mjs",
+    "verify:submission": "node scripts/verify-submission.mjs",
+    "sim:capture": "npm --prefix keeper run sim:capture",
+    "sim:vault": "npm --prefix keeper run sim:vault",
+    "deploy": "node scripts/deploy.mjs",
+    "wallet": "node scripts/wallet.mjs",
+    "web:dev": "npm --prefix web run dev",
+    "web:build": "npm --prefix web run build"
+  },
+  "dependencies": {
+    "@mysten/sui": "^1.28.0"
+  }
+}

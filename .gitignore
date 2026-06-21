@@ -1,0 +1,21 @@
+agent/.last_reasoning.json
+agent/.env
+deploy/testnet.env
+deploy/*.env
+keeper/data/
+node_modules/
+contracts/build/
+
+# Python virtualenv + bytecode caches — never committed, regenerated via requirements.txt
+agent/.venv/
+__pycache__/
+
+# Downloaded CLI binaries (sui, move-analyzer, etc.) — regenerated via tool install, not source
+.tools/
+
+# Unrelated prior hackathon project (Agora Agents / Arc-USDC) living in the same working dir
+openmind-main/
+
+# Contains a transcript with leaked live API keys — never commit
+cursor_document_review_for_openmind_dee.md
+
