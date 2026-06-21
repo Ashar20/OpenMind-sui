@@ -1,0 +1,26 @@
+{
+  "name": "openmind-keeper",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "vault:status": "tsx src/vaultCycle.ts",
+    "vault:open": "tsx src/vaultCycle.ts open",
+    "vault:close": "tsx src/vaultCycle.ts close",
+    "vault:roll": "tsx src/vaultCycle.ts roll",
+    "sim:capture": "tsx src/simCapture.ts",
+    "sim:vault": "tsx src/simVault.ts",
+    "walrus:upload": "tsx src/walrusCli.ts upload",
+    "walrus:read": "tsx src/walrusCli.ts read"
+  },
+  "dependencies": {
+    "@mysten-incubation/memwal": "^0.0.7",
+    "@mysten/seal": "^0.5.0",
+    "@mysten/sui": "2.19.0",
+    "@mysten/walrus": "1.2.1",
+    "dotenv": "^16.4.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
