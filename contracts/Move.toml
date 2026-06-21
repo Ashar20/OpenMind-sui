@@ -1,0 +1,16 @@
+[package]
+name = "openmind"
+edition = "2024.beta"
+
+[environments]
+testnet = "4c78adac"
+
+[dependencies]
+deepbook_predict = { git = "https://github.com/MystenLabs/deepbookv3.git", subdir = "packages/predict", rev = "predict-testnet-4-16", published-at = "0xf5ea2b3749c65d6e56507cc35388719aadb28f9cab873696a2f8687f5c785138", original-id = "0xf5ea2b3749c65d6e56507cc35388719aadb28f9cab873696a2f8687f5c785138" }
+openzeppelin_math = { r.mvr = "@openzeppelin-move/integer-math", override = true }
+openzeppelin_fp_math = { r.mvr = "@openzeppelin-move/fixed-point-math" }
+openzeppelin_access = { r.mvr = "@openzeppelin-move/access" }
+openzeppelin_utils = { r.mvr = "@openzeppelin-move/utils" }
+
+[addresses]
+openmind = "0x0"
