@@ -11,11 +11,11 @@ export const VAULT_OBJECT =
 
 export const AGENT_CAP_OBJECT =
   process.env.NEXT_PUBLIC_AGENT_CAP_OBJECT ??
-  "0x637d19f22591a949f52abec8eb9142aab697d6ab930ef3b41154af00c3b0fe7b";
+  "0x188a12ac96e6017e97b7b0f7a811e21d8e773eef726cce1a8fdad9c70049c4b1";
 
 export const OWNER_CAP_OBJECT =
   process.env.NEXT_PUBLIC_OWNER_CAP_OBJECT ??
-  "0xca60648d44aaecb2e60c44fbea26bad25384df01044b8c76537af61997440acd";
+  "0xf7a4be7c967906236d4b56666d2d55e6f25f4214ec8e581fe1a4ed02a22feef2";
 
 export const DUSDC_TYPE =
   process.env.NEXT_PUBLIC_DUSDC_TYPE ??

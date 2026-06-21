@@ -45,17 +45,17 @@ Deployed package: `0x3538ab0c8317477f23d1c53603a2d402bccf2f53fee8e52f9af1670bc6f
 | Step | Tx |
 |---|---|
 | Vault close (previous cycle, settled OTM) | [321xzKYNpGT9GZDniairhwoB1ZzKnJNAhifqKR2vzVt3](https://suiscan.xyz/testnet/tx/321xzKYNpGT9GZDniairhwoB1ZzKnJNAhifqKR2vzVt3) |
-| Reasoning anchor | [AfG6a4UhvvksupCfnuHs1cfrhkLPHN8PJgVT8hgdRyRG](https://suiscan.xyz/testnet/tx/AfG6a4UhvvksupCfnuHs1cfrhkLPHN8PJgVT8hgdRyRG) |
-| Vault open (agent_cap-gated) | [DWqNp4Crzorbfc7fB5KfRQRznqcmpxfYnBV8cyZnQMvn](https://suiscan.xyz/testnet/tx/DWqNp4Crzorbfc7fB5KfRQRznqcmpxfYnBV8cyZnQMvn) |
+| Reasoning anchor | [4pBhWupNrn4VzNChYcFEVrixM6HTjw6MDUBmE1hhw1wu](https://suiscan.xyz/testnet/tx/4pBhWupNrn4VzNChYcFEVrixM6HTjw6MDUBmE1hhw1wu) |
+| Vault open (agent_cap-gated) | [Unmyix5KW1Jzqk1QXsnoevDExoR7ip9BomZwNCWAH1F](https://suiscan.xyz/testnet/tx/Unmyix5KW1Jzqk1QXsnoevDExoR7ip9BomZwNCWAH1F) |
 
 | Walrus | Blob ID |
 |---|---|
-| Reasoning JSON | `t1wlK6WIsSng8nZ63T2gyYm9B9aKIWyQHaZUjR4z6eg` |
+| Reasoning JSON | `PHlx0Opx6oL2xOEWoolEwgeM9VX1OfnUnE_Mu6nZK6g` |
 
 **AgentCap after this cycle:** `spent` and `action_count` both incremented on-chain (queryable live at `/api/agent-cap/state` or the `/wallet` page) — the budget/expiry/revocation gate is real, not advisory.
 
 Vault: `0x5c7f075330ca60e6b3d68354baea80a624da25a6dbc771537994a00be9ca3f08`  
-AgentCap (shared): `0x637d19f22591a949f52abec8eb9142aab697d6ab930ef3b41154af00c3b0fe7b`
+AgentCap (shared): `0x188a12ac96e6017e97b7b0f7a811e21d8e773eef726cce1a8fdad9c70049c4b1` — re-granted via `node scripts/grant-agent-cap.mjs` when the previous cap's 24h window lapsed; see that script to redelegate again.
 
 ---
 

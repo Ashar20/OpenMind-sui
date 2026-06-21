@@ -15,6 +15,7 @@
     "sim:vault": "npm --prefix keeper run sim:vault",
     "deploy": "node scripts/deploy.mjs",
     "wallet": "node scripts/wallet.mjs",
+    "agent-cap:grant": "node scripts/grant-agent-cap.mjs",
     "web:dev": "npm --prefix web run dev",
     "web:build": "npm --prefix web run build"
   },
