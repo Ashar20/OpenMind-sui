@@ -6,6 +6,8 @@ Four tracks, one codebase: **DeepBook Predict** (adaptive carry vault), **Walrus
 
 Deadline: **June 29, 2026**
 
+Live demo: [open-mind-sui.vercel.app](https://open-mind-sui.vercel.app/)
+
 ---
 
 ## Architecture
